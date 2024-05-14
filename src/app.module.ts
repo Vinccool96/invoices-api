@@ -1,3 +1,4 @@
+import { APP_GUARD } from "@nestjs/core"
 import { Module } from "@nestjs/common"
 
 import { AppController } from "./app.controller"
@@ -8,11 +9,13 @@ import { RevenuesModule } from "./revenues/revenues.module"
 import { CardsModule } from "./cards/cards.module"
 import { InvoicesModule } from "./invoices/invoices.module"
 import { UsersModule } from "./users/users.module"
+import { AuthModule } from "./auth/auth.module"
+import { HttpAuthGuard } from "./auth/http-auth.guard"
 
 @Module({
-  imports: [PrismaModule, RevenuesModule, CardsModule, InvoicesModule, UsersModule],
+  imports: [PrismaModule, RevenuesModule, CardsModule, InvoicesModule, UsersModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_GUARD, useClass: HttpAuthGuard }],
 })
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class AppModule {}
