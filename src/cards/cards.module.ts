@@ -6,4 +6,5 @@ import { CardsService } from "./cards.service"
   controllers: [CardsController],
   providers: [CardsService],
 })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class CardsModule {}

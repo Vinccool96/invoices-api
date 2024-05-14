@@ -6,4 +6,5 @@ import { RevenuesService } from "./revenues.service"
   controllers: [RevenuesController],
   providers: [RevenuesService],
 })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class RevenuesModule {}

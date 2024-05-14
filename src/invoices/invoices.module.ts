@@ -6,4 +6,5 @@ import { InvoicesService } from "./invoices.service"
   controllers: [InvoicesController],
   providers: [InvoicesService],
 })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class InvoicesModule {}

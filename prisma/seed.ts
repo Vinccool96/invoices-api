@@ -64,6 +64,6 @@ async function main() {
   console.log("Seeding ended")
 }
 
-main().catch((err) => {
+main().catch((err: unknown) => {
   console.error("An error occurred while attempting to seed the database:", err)
 })
