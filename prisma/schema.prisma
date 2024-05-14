@@ -1,0 +1,39 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuidOssp(map: "uuid-ossp")]
+}
+
+model User {
+  id       String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name     String
+  email    String @unique
+  password String
+}
+
+model Invoice {
+  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  customerId String   @db.Uuid
+  amount     Int
+  status     String
+  date       DateTime @db.Date
+  customer   Customer @relation(fields: [customerId], references: [id])
+}
+
+model Customer {
+  id       String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name     String
+  email    String    @unique
+  imageUrl String
+  invoices Invoice[]
+}
+
+model Revenue {
+  month   String @unique @db.VarChar(4)
+  revenue Int
+}
