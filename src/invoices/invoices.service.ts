@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common"
 
+import { Prisma } from "@prisma/client"
+
 import { PrismaService } from "../prisma/prisma.service"
 
 import { formatCurrency, ITEMS_PER_PAGE } from "../utils"
@@ -108,6 +110,52 @@ export class InvoicesService {
     } catch (error) {
       console.error("Database Error:", error)
       throw new Error("Failed to fetch invoice.")
+    }
+  }
+
+  async createInvoice(formData: { customerId: string; amount: number; status: string }) {
+    const { customerId, amount, status } = formData
+
+    const amountInCents = amount * 100
+    const date = new Date()
+
+    const invoice: Prisma.InvoiceCreateInput = {
+      customer: { connect: { id: customerId } },
+      amount: amountInCents,
+      status: status,
+      date: date,
+    }
+
+    try {
+      await this.prisma.invoice.create({ data: invoice })
+    } catch (error) {
+      return { message: "Database Error: Failed to Create Invoice." }
+    }
+  }
+
+  async updateInvoice(id: string, formData: { customerId?: string; amount?: number; status?: string }) {
+    const { customerId, amount, status } = formData
+    const amountInCents = amount !== undefined ? amount * 100 : undefined
+
+    try {
+      await this.prisma.invoice.update({
+        where: { id: id },
+        data: {
+          customerId: customerId,
+          amount: amountInCents,
+          status: status,
+        },
+      })
+    } catch (error) {
+      return { message: "Database Error: Failed to Update Invoice." }
+    }
+  }
+
+  async deleteInvoice(id: string) {
+    try {
+      await this.prisma.invoice.delete({ where: { id: id } })
+    } catch (error) {
+      return { message: "Database Error: Failed to Delete Invoice." }
     }
   }
 }
