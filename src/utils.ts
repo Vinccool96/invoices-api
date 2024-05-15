@@ -1,6 +1,6 @@
 import { Revenue } from "@prisma/client"
 
-export const ITEMS_PER_PAGE = 6
+export const ITEMS_PER_PAGE = 5
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {

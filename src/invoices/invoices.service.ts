@@ -26,7 +26,7 @@ export class InvoicesService {
       const data = await this.prisma.invoice.findMany({
         orderBy: { date: "desc" },
         include: { customer: true },
-        take: 5,
+        take: ITEMS_PER_PAGE,
       })
 
       return data.map((invoice) => ({
@@ -95,18 +95,20 @@ export class InvoicesService {
 
   async fetchInvoiceById(id: string) {
     try {
-      const data = await this.prisma.invoice.findMany({
+      const invoice = await this.prisma.invoice.findUnique({
         where: { id: id },
         select: { id: true, customerId: true, amount: true, status: true },
       })
 
-      const invoice = data.map((invoice) => ({
+      if (invoice === null) {
+        return null
+      }
+
+      return {
         ...invoice,
         // Convert amount from cents to dollars
-        amount: invoice.amount / 100,
-      }))
-
-      return invoice[0]
+        amount: formatCurrency(invoice.amount),
+      }
     } catch (error) {
       console.error("Database Error:", error)
       throw new Error("Failed to fetch invoice.")

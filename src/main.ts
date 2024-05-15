@@ -23,7 +23,6 @@ async function bootstrap() {
     .setTitle("Invoices API")
     .setDescription("The Invoices API implemented with NestJS")
     .setVersion("1.0")
-    .addTag("cats")
     .addBasicAuth()
     .addBearerAuth()
     .build()

@@ -48,8 +48,8 @@ export class CustomersService {
 
       return data.map((customer) => ({
         ...customer,
-        total_pending: formatCurrency(customer.totalPending),
-        total_paid: formatCurrency(customer.totalPaid),
+        totalPending: formatCurrency(customer.totalPending),
+        totalPaid: formatCurrency(customer.totalPaid),
       }))
     } catch (err) {
       console.error("Database Error:", err)
