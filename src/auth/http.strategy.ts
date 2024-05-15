@@ -14,7 +14,7 @@ export class HttpStrategy extends PassportStrategy(BasicStrategy) {
   async validate(username: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(username, password)
 
-    if (user !== null) {
+    if (user === null) {
       throw new UnauthorizedException()
     }
 

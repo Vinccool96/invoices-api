@@ -24,6 +24,8 @@ async function bootstrap() {
     .setDescription("The Invoices API implemented with NestJS")
     .setVersion("1.0")
     .addTag("cats")
+    .addBasicAuth()
+    .addBearerAuth()
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup("api", app, document)
