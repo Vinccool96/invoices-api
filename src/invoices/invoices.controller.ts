@@ -1,5 +1,13 @@
-import { Controller, Get, NotFoundException, Param, Query } from "@nestjs/common"
-import { ApiBasicAuth, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger"
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query } from "@nestjs/common"
+import {
+  ApiBasicAuth,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from "@nestjs/swagger"
 
 import { InvoicesService } from "./invoices.service"
 
@@ -7,6 +15,8 @@ import { InvoiceEntity } from "./entities/invoice.entity"
 
 import { formatCurrency } from "../utils"
 import { InvoiceMinimalEntity } from "./entities/invoice-minimal.entity"
+import { CreateInvoiceDto } from "./dto/create-invoice.dto"
+import { UpdateInvoiceDto } from "./dto/update-invoice.dto"
 
 @Controller("invoices")
 @ApiTags("invoices")
@@ -65,5 +75,25 @@ export class InvoicesController {
     }
 
     return invoice
+  }
+
+  @Post()
+  @ApiCreatedResponse({ description: "Creates an invoice", type: InvoiceEntity })
+  async createInvoice(@Body() invoice: CreateInvoiceDto): Promise<InvoiceEntity> {
+    return await this.invoicesService.createInvoice(invoice)
+  }
+
+  @Put(":id")
+  @ApiParam({ name: "id", description: "The ID of the invoice", type: String })
+  @ApiOkResponse({ description: "Updates an invoice", type: InvoiceEntity })
+  async updateInvoice(@Param("id") id: string, @Body() invoice: UpdateInvoiceDto): Promise<InvoiceEntity> {
+    return await this.invoicesService.updateInvoice(id, invoice)
+  }
+
+  @Delete(":id")
+  @ApiParam({ name: "id", description: "The ID of the invoice", type: String })
+  @ApiOkResponse({ description: "Deletes an invoice", type: InvoiceEntity })
+  async deleteInvoice(@Param("id") id: string): Promise<InvoiceEntity> {
+    return await this.invoicesService.deleteInvoice(id)
   }
 }

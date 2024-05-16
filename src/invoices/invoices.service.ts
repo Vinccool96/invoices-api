@@ -129,9 +129,16 @@ export class InvoicesService {
     }
 
     try {
-      await this.prisma.invoice.create({ data: invoice })
+      const created = await this.prisma.invoice.create({ data: invoice, include: { customer: true } })
+
+      return {
+        ...created,
+        // Convert amount from cents to dollars
+        amount: formatCurrency(created.amount),
+      }
     } catch (error) {
-      return { message: "Database Error: Failed to Create Invoice." }
+      console.error("Database Error:", error)
+      throw new Error("Failed to Create Invoice.")
     }
   }
 
@@ -140,24 +147,39 @@ export class InvoicesService {
     const amountInCents = amount !== undefined ? amount * 100 : undefined
 
     try {
-      await this.prisma.invoice.update({
+      const updated = await this.prisma.invoice.update({
         where: { id: id },
         data: {
           customerId: customerId,
           amount: amountInCents,
           status: status,
         },
+        include: { customer: true },
       })
+
+      return {
+        ...updated,
+        // Convert amount from cents to dollars
+        amount: formatCurrency(updated.amount),
+      }
     } catch (error) {
-      return { message: "Database Error: Failed to Update Invoice." }
+      console.error("Database Error:", error)
+      throw new Error("Failed to Update Invoice.")
     }
   }
 
   async deleteInvoice(id: string) {
     try {
-      await this.prisma.invoice.delete({ where: { id: id } })
+      const deleted = await this.prisma.invoice.delete({ where: { id: id }, include: { customer: true } })
+
+      return {
+        ...deleted,
+        // Convert amount from cents to dollars
+        amount: formatCurrency(deleted.amount),
+      }
     } catch (error) {
-      return { message: "Database Error: Failed to Delete Invoice." }
+      console.error("Database Error:", error)
+      throw new Error("Failed to Delete Invoice.")
     }
   }
 }
