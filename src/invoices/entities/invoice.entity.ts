@@ -8,6 +8,9 @@ export class InvoiceEntity {
   @ApiProperty({ description: "The invoice's customer", type: CustomerEntity })
   customer: CustomerEntity
 
+  @ApiProperty({ description: "The ID of the invoice's customer" })
+  customerId: string
+
   @ApiProperty({ description: "The invoice's amount" })
   amount: string
 

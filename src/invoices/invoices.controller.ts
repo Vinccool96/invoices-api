@@ -49,6 +49,7 @@ export class InvoicesController {
           email: invoice.email,
           imageUrl: invoice.imageUrl,
         },
+        customerId: invoice.customerId,
         amount: formatCurrency(invoice.amount),
         status: invoice.status,
         date: new Date(invoice.date),
